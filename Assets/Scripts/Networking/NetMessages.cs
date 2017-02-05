@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class CaptureCellMessage : MessageBase
+namespace Nox7atra.Networking
 {
-    public int PlayerID;
-    public int CellIndex;
-}
-public enum MyMsgType : short
-{
-    CaptureCell = MsgType.Highest + 1
+    public class PlayerIDMessage : MessageBase
+    {
+        public int PlayerID;
+    }
+    public class CaptureCellMessage : MessageBase
+    {
+        public int[] Position;
+    }
+
+    public enum MyMsgType : short
+    {
+        PlayerID    = MsgType.Highest + 1,
+        CaptureCell = MsgType.Highest + 2,
+    }
 }

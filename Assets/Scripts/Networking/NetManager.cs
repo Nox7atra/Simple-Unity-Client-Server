@@ -1,54 +1,74 @@
-﻿using UnityEngine;
+﻿using Nox7atra.Core;
+using UnityEngine;
+using UnityEngine.Networking;
 
-public class NetManager : Singleton<NetManager>
+namespace Nox7atra.Networking
 {
-    [SerializeField]
-    private string _ServerIP;
-    [SerializeField]
-    private int _Port;
-    [SerializeField]
-    private BuildType _BuildType;
+    public class NetManager : Singleton<NetManager>
+    {
+        [SerializeField]
+        private string _ServerIP;
+        [SerializeField]
+        private int _Port;
+        [SerializeField]
+        private BuildType _BuildType;
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-        switch (_BuildType)
+        public User CurrentUser
         {
-            case BuildType.Client:
-                Client.Instance.Start(_ServerIP, _Port);
-                break;
-            case BuildType.Server:
-                Server.Instance.Start(_Port);
-                break;
+            get
+            {
+                switch (_BuildType)
+                {
+                    default:
+                    case BuildType.Client:
+                        return Client.Instance.CurrentUser;
+                    case BuildType.Server:
+                        return Server.Instance.CurrentUser;
+                }
+            }
         }
+        void Awake()
+        {
+            switch (_BuildType)
+            {
+                case BuildType.Client:
+                    Client.Instance.Start(_ServerIP, _Port);
+                    break;
+                case BuildType.Server:
+                    Server.Instance.Start(_Port);
+                    break;
+            }
+        }
+        public void SendCaptureCellMessage(CaptureCellMessage msg)
+        {
+            switch (_BuildType)
+            {
+                case BuildType.Client:
+                    Client.Instance.SendMessage(msg, MyMsgType.CaptureCell);
+                    break;
+                case BuildType.Server:
+                    Server.Instance.SendMessageToAllClients(msg, MyMsgType.CaptureCell);
+                    break;
+            }
+        }
+        protected override void OnDestroy()
+        {
+            switch (_BuildType)
+            {
+                case BuildType.Client:
+                    Client.Instance.Shutdown();
+                    break;
+                case BuildType.Server:
+                    Server.Instance.Shutdown();
+                    break;
+            }
+            base.OnDestroy();
+        }
+     
     }
-    public void SendMessage(MyMsgType msgType)
+    public enum BuildType
     {
-        switch (_BuildType)
-        {
-            case BuildType.Client:
-                Client.Instance.SendMessage(msgType);
-                break;
-            case BuildType.Server:
-                Server.Instance.SendMessageToAllClients(msgType);
-                break;
-        }
-    }
-    private void OnDestroy()
-    {
-        switch (_BuildType)
-        {
-            case BuildType.Client:
-                Client.Instance.Shutdown();
-                break;
-            case BuildType.Server:
-                Server.Instance.Shutdown();
-                break;
-        }
+        Client,
+        Server
     }
 }
-public enum BuildType
-{
-    Client,
-    Server
-    }
