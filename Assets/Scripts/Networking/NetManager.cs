@@ -51,7 +51,7 @@ namespace Nox7atra.Networking
                     break;
             }
         }
-        protected override void OnDestroy()
+        protected void OnDestroy()
         {
             switch (_BuildType)
             {
@@ -62,7 +62,6 @@ namespace Nox7atra.Networking
                     Server.Instance.Shutdown();
                     break;
             }
-            base.OnDestroy();
         }
      
     }

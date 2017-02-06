@@ -1,7 +1,5 @@
 ﻿using Nox7atra.Core;
 using Nox7atra.Networking;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Nox7atra.UI
@@ -13,11 +11,18 @@ namespace Nox7atra.UI
 
         void Update()
         {
-            bool isYourTurn 
-                = NetManager.Instance.CurrentUser.PlayerID 
-                == TurnManager.Instance.CurrentPlayerIndex;
-
-            _Status.text = isYourTurn ? "Твой ход" : "Ход противника";
+            
+            if (NetManager.Instance.CurrentUser.PlayerID > 0)
+            {
+                bool isYourTurn
+                    = NetManager.Instance.CurrentUser.PlayerID
+                    == TurnManager.Instance.CurrentPlayerIndex;
+                _Status.text = isYourTurn ? "Твой ход" : "Ход противника";
+            }
+            else
+            {
+                _Status.text = "Вы зритель";
+            }
         }
     }
     
