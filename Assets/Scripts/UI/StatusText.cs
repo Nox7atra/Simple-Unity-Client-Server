@@ -12,7 +12,7 @@ namespace Nox7atra.UI
         void Update()
         {
             
-            if (NetManager.Instance.CurrentUser.PlayerID > 0)
+            if (NetManager.Instance.CurrentUser.PlayerID >= 0)
             {
                 bool isYourTurn
                     = NetManager.Instance.CurrentUser.PlayerID

@@ -38,7 +38,7 @@ namespace Nox7atra.Networking
         public void Start(int port)
         {
             _CurrentUser = new User();
-            NetworkServer.Listen(IPAddress.Any.ToString(), port);
+            NetworkServer.Listen(port);
             NetworkServer.maxDelay = 0;
             RegisterServerHandlers();
         }
